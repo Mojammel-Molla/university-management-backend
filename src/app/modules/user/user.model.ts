@@ -5,11 +5,9 @@ const userSchema = new Schema<TUser>(
   {
     id: {
       type: String,
-      // required: [true, 'User Id is required'],
     },
     password: {
       type: String,
-      // required: [true, 'Password is required'],
     },
     needsPasswordChange: {
       type: Boolean,
