@@ -1,7 +1,8 @@
 import { TUser } from './user.interface'
 import { UserModel } from './user.model'
-const createUserIntoDB = async (user: TUser) => {
-  const result = await UserModel.create(user)
+
+const createUserIntoDB = async (userData: TUser) => {
+  const result = await UserModel.create(userData)
   return result
 }
 

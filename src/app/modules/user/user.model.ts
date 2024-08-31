@@ -5,11 +5,11 @@ const userSchema = new Schema<TUser>(
   {
     id: {
       type: String,
-      required: true,
+      // required: [true, 'User Id is required'],
     },
     password: {
       type: String,
-      required: true,
+      // required: [true, 'Password is required'],
     },
     needsPasswordChange: {
       type: Boolean,
@@ -17,11 +17,12 @@ const userSchema = new Schema<TUser>(
     },
     role: {
       type: String,
-      enum: ['admin', 'student', 'faculty'],
+      enum: ['student', 'faculty', 'admin'],
     },
     status: {
       type: String,
       enum: ['in-progress', 'blocked'],
+      default: 'in-progress',
     },
     isDeleted: {
       type: Boolean,
