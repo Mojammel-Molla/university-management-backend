@@ -3,7 +3,7 @@ import { Types } from 'mongoose'
 export type TUserName = {
   firstName: string
   middleName?: string
-  lasTName: string
+  lastName: string
 }
 export type TGuardian = {
   fatherName: string

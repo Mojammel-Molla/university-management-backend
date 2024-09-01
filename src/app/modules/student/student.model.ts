@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose'
+import { model, Schema } from 'mongoose'
 import {
   TGuardian,
   TLocalGuardian,
@@ -9,7 +9,7 @@ import {
 const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
-    required: [true, 'First name is required'],
+    // required: [true, 'First name is required'],
     trim: true,
     maxlength: [20, 'First Name cannot be more than 20 characters'],
   },
@@ -17,9 +17,9 @@ const userNameSchema = new Schema<TUserName>({
     type: String,
     trim: true,
   },
-  lasTName: {
+  lastName: {
     type: String,
-    required: [true, 'Last name is required'],
+    // required: [true, 'Last name is required'],
     trim: true,
     maxlength: [20, 'Last Name cannot be more than 20 characters'],
   },
@@ -29,28 +29,28 @@ const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
     trim: true,
-    required: [true, 'Father Name is required'],
+    // required: [true, 'Father Name is required'],
   },
   fatherOccupation: {
     type: String,
     trim: true,
-    required: [true, 'Father occupation is required'],
+    // required: [true, 'Father occupation is required'],
   },
   fatherContactNo: {
     type: String,
-    required: [true, 'Father Contact No is required'],
+    // required: [true, 'Father Contact No is required'],
   },
   motherName: {
     type: String,
-    required: [true, 'Mother Name is required'],
+    // required: [true, 'Mother Name is required'],
   },
   motherOccupation: {
     type: String,
-    required: [true, 'Mother occupation is required'],
+    // required: [true, 'Mother occupation is required'],
   },
   motherContactNo: {
     type: String,
-    required: [true, 'Mother Contact No is required'],
+    // required: [true, 'Mother Contact No is required'],
   },
 })
 
@@ -139,3 +139,5 @@ const studentSchema = new Schema<TStudent>({
     default: false,
   },
 })
+
+export const StudentModel = model<TStudent>('student', studentSchema)
