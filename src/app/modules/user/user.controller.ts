@@ -1,22 +1,20 @@
-import { Request, Response } from 'express'
 import { UserServices } from './user.service'
+import sendResponse from '../../utils/sendResponse'
+import httpStatus from 'http-status'
+import catchAsync from '../../utils/catchAsync'
 
-const createUser = async (req: Request, res: Response) => {
-  try {
-    const { password, student } = req.body
-    console.log(password, student)
-    //  const validatedUser = userValidationSchema.parse(userData)
-    const result = await UserServices.createStudentIntoDB(password, student)
-    // console.log('This is user data', userData)
-    res.status(200).json({
-      success: true,
-      message: 'User is created successfully',
-      data: result,
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
+const createUser = catchAsync(async (req, res, next) => {
+  const { password, student } = req.body
+  //  const validatedUser = userValidationSchema.parse(userData)
+  const result = await UserServices.createStudentIntoDB(password, student)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User is created successfully',
+    data: result,
+  })
+})
 export const UserControllers = {
   createUser,
 }
