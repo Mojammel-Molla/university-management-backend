@@ -73,7 +73,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
   },
 })
 
-const studentSchema = new Schema<TStudent>({
+const createStudentSchema = new Schema<TStudent>({
   id: {
     type: String,
     required: [true, 'Id is require'],
@@ -83,7 +83,7 @@ const studentSchema = new Schema<TStudent>({
     type: Schema.Types.ObjectId,
     required: [true, 'User id is require'],
     unique: true,
-    ref: 'User',
+    ref: 'user',
   },
   name: {
     type: userNameSchema,
@@ -136,7 +136,7 @@ const studentSchema = new Schema<TStudent>({
   profileImg: { type: String },
   admissionSemester: {
     type: Schema.Types.ObjectId,
-    ref: 'AcademicSemester',
+    ref: 'admissionSemester',
   },
   isDeleted: {
     type: Boolean,
@@ -144,4 +144,4 @@ const studentSchema = new Schema<TStudent>({
   },
 })
 
-export const StudentModel = model<TStudent>('student', studentSchema)
+export const StudentModel = model<TStudent>('student', createStudentSchema)
