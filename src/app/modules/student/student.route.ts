@@ -13,5 +13,6 @@ router.patch(
   validateRequest(StudentValidations.updateStudentValidationSchema),
   StudentControllers.updateStudent
 )
+router.delete('/:studentId', StudentControllers.deleteStudent)
 
 export const StudentRoutes = router

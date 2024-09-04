@@ -11,6 +11,7 @@ const createUserNameValidationSchema = z.object({
   middleName: z.string().optional(),
   lastName: z.string(),
 })
+
 const createGuardianValidationSchema = z.object({
   fatherName: z.string(),
   fatherContactNo: z.string(),
@@ -45,7 +46,8 @@ const createStudentValidationSchema = z.object({
       localGuardian: createLocalGuardianValidationSchema,
       profileImg: z.string().optional(),
       admissionSemester: z.string(),
-      isDeleted: z.string(),
+      academicDepartment: z.string(),
+      isDeleted: z.boolean().default(false),
     }),
   }),
 })
@@ -98,7 +100,8 @@ const updateStudentValidationSchema = z.object({
       localGuardian: updateLocalGuardianValidationSchema,
       profileImg: z.string().optional(),
       admissionSemester: z.string().optional(),
-      isDeleted: z.string().optional(),
+      academicDepartment: z.string().optional(),
+      isDeleted: z.boolean().optional(),
     }),
   }),
 })

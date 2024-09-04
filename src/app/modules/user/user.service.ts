@@ -18,40 +18,45 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     payload.admissionSemester
   )
 
+  if (!admissionSemester) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Invalid admission semester ID')
+  }
   const session = await mongoose.startSession()
 
   try {
     session.startTransaction()
-    //set generated id
     userData.id = await generateStudentId(admissionSemester)
 
-    //create a user transaction-1
     const newUser = await UserModel.create([userData], { session })
 
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user')
     }
-    //set id, _id as user
-    payload.id = newUser[0].id
-    payload.user = newUser[0]._id // reference id of student
 
-    //create a user transaction-2
-    const newStudent = await StudentModel.create([payload, { session }])
+    payload.id = newUser[0].id
+    payload.user = newUser[0]._id
+
+    const newStudent = await StudentModel.create([payload], { session })
     if (!newStudent.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student')
     }
 
     await session.commitTransaction()
-    await session.endSession()
-
     return newStudent
-  } catch (err) {
+  } catch (error) {
     await session.abortTransaction()
-    await session.endSession()
+
     throw new AppError(httpStatus.BAD_REQUEST, 'Operation failed')
+  } finally {
+    session.endSession()
   }
 }
 
+const getUsersFromDB = async () => {
+  const result = await UserModel.find()
+  return result
+}
 export const UserServices = {
   createStudentIntoDB,
+  getUsersFromDB,
 }

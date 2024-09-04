@@ -13,7 +13,9 @@ app.use(cors())
 app.use('/api/v1', router)
 
 app.use(globalErrorHandler)
+
 app.use(notFound)
+
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')
 })

@@ -1,7 +1,7 @@
 import { TAcademicSemester } from '../academic-semester/academicSemester.interface'
 import { UserModel } from './user.model'
 
-const findLastStudentId = async () => {
+const findLastStudentId = async (): Promise<string | undefined> => {
   const lastStudent = await UserModel.findOne(
     {
       role: 'student',
@@ -13,27 +13,30 @@ const findLastStudentId = async () => {
   )
     .sort({ createdAt: -1 })
     .lean()
+
   return lastStudent?.id ? lastStudent.id.substring(6) : undefined
 }
 
-export const generateStudentId = async (payload: TAcademicSemester) => {
-  let currentId = (0).toString()
+export const generateStudentId = async (
+  payload: TAcademicSemester
+): Promise<string> => {
+  let currentId = '0000'
   const lastStudentId = await findLastStudentId()
 
-  const lastStudentYear = lastStudentId?.substring(0, 4)
-  const lastStudentSemesterCode = lastStudentId?.substring(4, 6)
-  const currentStudentYear = payload.year
-  const currentSemesterCode = payload.code
-  if (
-    lastStudentId &&
-    lastStudentSemesterCode === currentSemesterCode &&
-    lastStudentYear === currentStudentYear
-  ) {
-    currentId = lastStudentId.substring(6)
+  if (lastStudentId) {
+    const lastStudentYear = lastStudentId.substring(0, 4)
+    const lastStudentSemesterCode = lastStudentId.substring(4, 6)
+    const currentStudentYear = payload.year
+    const currentSemesterCode = payload.code
+
+    if (
+      lastStudentSemesterCode === currentSemesterCode &&
+      lastStudentYear === currentStudentYear
+    ) {
+      currentId = lastStudentId.substring(6)
+    }
   }
 
-  let incrementId = (Number(currentId) + 1).toString().padStart(4, '0')
-  incrementId = `${payload.year}${payload.code}${incrementId}`
-  // console.log(payload, incrementId)
-  return incrementId
+  const incrementId = (Number(currentId) + 1).toString().padStart(4, '0')
+  return `${payload.year}${payload.code}${incrementId}`
 }
