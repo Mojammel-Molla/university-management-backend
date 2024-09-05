@@ -19,32 +19,70 @@ const getSingleStudentFromDB = async (id: string) => {
 }
 
 const updateStudentIntoDB = async (id: string, payload: Partial<TStudent>) => {
-  const result = await StudentModel.findByIdAndUpdate({ _id: id }, payload, {
-    new: true,
-  })
+  const { name, guardian, localGuardian, ...remainingStudentData } = payload
+
+  const modifiedUpdatedData: Record<string, unknown> = {
+    ...remainingStudentData,
+  }
+
+  /*
+    guardian: {
+      fatherOccupation:"Teacher"
+    }
+
+    guardian.fatherOccupation = Teacher
+
+    name.firstName = 'John'
+    name.lastName = 'Doe'
+  */
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedData[`name.${key}`] = value
+    }
+  }
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedUpdatedData[`guardian.${key}`] = value
+    }
+  }
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedUpdatedData[`localGuardian.${key}`] = value
+    }
+  }
+  console.log(id, modifiedUpdatedData)
+
+  const result = await StudentModel.findOneAndUpdate(
+    { id },
+    modifiedUpdatedData,
+    {
+      new: true,
+    }
+  )
   return result
 }
 
-const deleteStudentFromDB = async (_id: string) => {
+const deleteStudentFromDB = async (id: string) => {
   const session = await mongoose.startSession()
 
   try {
     session.startTransaction()
     const deleteStudent = await StudentModel.findByIdAndUpdate(
-      { _id },
+      { id },
       { isDeleted: true },
       { new: true, session }
     )
-    console.log('This is student ', deleteStudent)
+    // console.log('This is student ', deleteStudent)
     if (!deleteStudent) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete student')
     }
     const deleteUser = await UserModel.findByIdAndUpdate(
-      { _id },
+      { id },
       { isDeleted: true },
       { new: true, session }
     )
-    console.log('This is user', deleteUser)
+    // console.log('This is user', deleteUser)
     if (!deleteUser) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to delete user')
     }
