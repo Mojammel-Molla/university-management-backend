@@ -5,6 +5,7 @@ import httpStatus from 'http-status'
 import { TErrorSources } from '../interface/error'
 import { ZodError } from 'zod'
 import handleZodError from '../errors/handleZodError'
+import config from '../config'
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = 500
@@ -26,7 +27,8 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   return res.status(httpStatus.MISDIRECTED_REQUEST).json({
     success: false,
     massage,
-    error: err,
+    err,
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   })
 }
 
